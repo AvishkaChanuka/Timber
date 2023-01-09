@@ -1,3 +1,4 @@
+#include <sstream>
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -61,6 +62,32 @@ int main(){
     Clock clock;
 
     bool paused = true;
+
+    int score = 0;
+
+    Text messageText, scoreText;
+
+    Font font;
+    font.loadFromFile("../fonts/KOMIKAP_.ttf");
+
+    messageText.setFont(font);
+    scoreText.setFont(font);
+
+    messageText.setString("Press Enter to Start");
+    scoreText.setString("Score = 0");
+
+    messageText.setCharacterSize(75);
+    scoreText.setCharacterSize(100);
+
+    messageText.setFillColor(Color::White);
+    scoreText.setFillColor(Color::White);
+
+    FloatRect textRect = messageText.getLocalBounds();
+
+    messageText.setOrigin(textRect.left + textRect.width/2.0f,textRect.top + textRect.height/2.0f);
+    messageText.setPosition(1920 / 2.0f,1080 / 2.0f);
+
+    scoreText.setPosition(20,20);
 
     while (window.isOpen())
     {
@@ -182,7 +209,12 @@ int main(){
 
                 }
             }
-        }
+
+            //Update score text
+            std::stringstream ss;
+            ss << "Score = " << score;
+            scoreText.setString(ss.str());
+        }//End !paused
         /*
          *******************************************
          * Draw the scene
@@ -202,6 +234,12 @@ int main(){
         window.draw(spriteTree);
 
         window.draw(spriteBee);
+
+        window.draw(scoreText);
+
+        if(paused){
+            window.draw(messageText);
+        }
 
         //Show everything we just drew
         window.display();
